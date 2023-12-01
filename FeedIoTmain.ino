@@ -83,7 +83,7 @@ void manejarNuevosMensajes(int numNewMessages) {
       configuracion +=
           "Botón de mascota:\t" + String(PetBtn ? "On" : "Off") + "\n";
       configuracion +=
-          "Alimento:\t" + String(tankState ? "Disponible" : "Vacio") + "\n";
+          "Alimento:\t" + String(tankState ? "Vacio" : "Disponible") + "\n";
       configuracion += "Plato:\t" + String(noFood ? "Vacio" : "Lleno") + "\n";
       configuracion += "Se dispensa cada:\t" + String(horautotime) + " horas " +
                        String(minautotime) + " minutos\n";
@@ -93,7 +93,7 @@ void manejarNuevosMensajes(int numNewMessages) {
 
     // instant manual dispense
     if (user_prompt == "/disp") {
-      if (tankState) {
+      if (!tankState) {
         if (noFood) {
           bot.sendMessage(chat_id, "Activado directo", "");
           servoMove();
@@ -140,7 +140,7 @@ void manejarNuevosMensajes(int numNewMessages) {
                       "");
       vTaskDelay(tdelay * 1000);
 
-      if (tankState) {
+      if (!tankState) {
         if (noFood) {
           bot.sendMessage(chat_id, "Activación temporizada", "");
           servoMove();
@@ -248,7 +248,7 @@ void setup() {
   tankState = digitalRead(tankPin);
   noFood = digitalRead(nofoodPin);
 
-  if (tankState) {
+  if (!tankState) {
     digitalWrite(ledPin, HIGH);
   } else {
     digitalWrite(ledPin, LOW);
@@ -269,7 +269,7 @@ void setup() {
   WiFi.mode(WIFI_STA);
   Serial.print("Conectando a ");
   Serial.println(SSID);
-  WiFi.begin(SSID,PASSWORD);
+  WiFi.begin(SSID, PASSWORD);
 
   while (WiFi.status() != WL_CONNECTED) { //&& elapsedTime < 40000) {
     delay(500);
@@ -327,7 +327,7 @@ void loop() {
     tankState = digitalRead(tankPin);
     noFood = digitalRead(nofoodPin);
 
-    if (tankState) {
+    if (!tankState) {
       digitalWrite(ledPin, HIGH);
       restState = 0;
     } else {
@@ -343,7 +343,7 @@ void loop() {
   if (PetBtnPressed) {
     PetBtnPressed = false;
     Serial.println("Activated by pet");
-    if (tankState) {
+    if (!tankState) {
       if (noFood) {
         servoMove();
         getLocalTime(&timeinfo);
@@ -404,7 +404,7 @@ void loop() {
       // Serial.println(now);
       // Serial.print(String(lastAutoTime + (horautotime * 3600 + minautotime
       // * 60)));
-      if (tankState) {
+      if (!tankState) {
         if (noFood) {
           servoMove();
           bot.sendMessage(CHAT_ID,
